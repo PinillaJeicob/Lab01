@@ -1,0 +1,95 @@
+// Continuación del código existente
+
+public class CalculadoraGUI extends JFrame {
+    private JTextField pantalla;
+    private String operador;
+    private double resultado;
+
+    public CalculadoraGUI() {
+        // Código existente...
+
+        // Botones adicionales para trigonometría, raíz, potencia e IVA
+        String[] botones = {
+            "7", "8", "9", "/",
+            "4", "5", "6", "*",
+            "1", "2", "3", "-",
+            "0", "C", "=", "+",
+            "sin", "cos", "tan", "√",
+            "^", "IVA"
+        };
+
+        // Código existente para crear botones...
+    }
+
+    private class BotonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String comando = e.getActionCommand();
+
+            if (comando.equals("=")) {
+                calcularResultado();
+                operador = "";
+            } else if (comando.equals("C")) {
+                pantalla.setText("");
+                operador = "";
+                resultado = 0;
+            } else if ("+-*/sin cos tan √ ^ IVA".contains(comando)) {
+                operador = comando;
+                resultado = Double.parseDouble(pantalla.getText());
+                pantalla.setText("");
+            } else {
+                pantalla.setText(pantalla.getText() + comando);
+            }
+        }
+    }
+
+    private void calcularResultado() {
+        double segundoNumero = operador.equals("sin") || operador.equals("cos") || operador.equals("tan") || operador.equals("IVA") ? 0 : Double.parseDouble(pantalla.getText());
+
+        try {
+            switch (operador) {
+                case "+":
+                    resultado += segundoNumero;
+                    break;
+                case "-":
+                    resultado -= segundoNumero;
+                    break;
+                case "*":
+                    resultado *= segundoNumero;
+                    break;
+                case "/":
+                    if (segundoNumero == 0) throw new ArithmeticException("División por 0");
+                    resultado /= segundoNumero;
+                    break;
+                case "sin":
+                    resultado = Math.sin(Math.toRadians(resultado));
+                    break;
+                case "cos":
+                    resultado = Math.cos(Math.toRadians(resultado));
+                    break;
+                case "tan":
+                    if (resultado % 90 == 0 && (int) (resultado / 90) % 2 != 0) throw new ArithmeticException("Tangente indeterminada");
+                    resultado = Math.tan(Math.toRadians(resultado));
+                    break;
+                case "√":
+                    if (resultado < 0) throw new ArithmeticException("Raíz de un número negativo");
+                    resultado = Math.sqrt(segundoNumero);
+                    break;
+                case "^":
+                    resultado = Math.pow(resultado, segundoNumero);
+                    break;
+                case "IVA":
+                    double porcentajeIVA = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el porcentaje de IVA:"));
+                    resultado = resultado * (porcentajeIVA / 100);
+                    break;
+            }
+
+            pantalla.setText(String.valueOf(resultado));
+        } catch (ArithmeticException ex) {
+            pantalla.setText("Error: " + ex.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        new CalculadoraGUI();
+    }
+}
