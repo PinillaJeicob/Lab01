@@ -1,0 +1,65 @@
+// Continuación del código existente
+
+public class CalculadoraGUI extends JFrame {
+    private JTextField pantalla;
+    private String operador;
+    private double resultado;
+
+    public CalculadoraGUI() {
+        // Código existente...
+
+        // Inicialización de variables
+        operador = "";
+        resultado = 0;
+    }
+
+    private class BotonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String comando = e.getActionCommand();
+
+            if (comando.equals("=")) {
+                calcularResultado();
+                operador = "";
+            } else if (comando.equals("C")) {
+                pantalla.setText("");
+                operador = "";
+                resultado = 0;
+            } else if ("+-*/".contains(comando)) {
+                operador = comando;
+                resultado = Double.parseDouble(pantalla.getText());
+                pantalla.setText("");
+            } else {
+                pantalla.setText(pantalla.getText() + comando);
+            }
+        }
+    }
+
+    private void calcularResultado() {
+        double segundoNumero = Double.parseDouble(pantalla.getText());
+
+        switch (operador) {
+            case "+":
+                resultado += segundoNumero;
+                break;
+            case "-":
+                resultado -= segundoNumero;
+                break;
+            case "*":
+                resultado *= segundoNumero;
+                break;
+            case "/":
+                if (segundoNumero == 0) {
+                    pantalla.setText("Error: División por 0");
+                    return;
+                }
+                resultado /= segundoNumero;
+                break;
+        }
+
+        pantalla.setText(String.valueOf(resultado));
+    }
+
+    public static void main(String[] args) {
+        new CalculadoraGUI();
+    }
+}
