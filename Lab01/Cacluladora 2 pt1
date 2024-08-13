@@ -1,0 +1,63 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CalculadoraGUI extends JFrame {
+    private JTextField pantalla;
+
+    public CalculadoraGUI() {
+        // Configuración de la ventana
+        setTitle("Calculadora");
+        setSize(300, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Configuración del cuadro de texto
+        pantalla = new JTextField();
+        pantalla.setHorizontalAlignment(JTextField.RIGHT);
+        pantalla.setEditable(false);
+        add(pantalla, BorderLayout.NORTH);
+
+        // Configuración del panel de botones
+        JPanel panelBotones = new JPanel();
+        panelBotones.setLayout(new GridLayout(4, 4));
+
+        // Botones de la calculadora
+        String[] botones = {
+            "7", "8", "9", "/",
+            "4", "5", "6", "*",
+            "1", "2", "3", "-",
+            "0", "C", "=", "+"
+        };
+
+        for (String texto : botones) {
+            JButton boton = new JButton(texto);
+            panelBotones.add(boton);
+            boton.addActionListener(new BotonListener());
+        }
+
+        add(panelBotones);
+
+        // Mostrar la ventana
+        setVisible(true);
+    }
+
+    private class BotonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String comando = e.getActionCommand();
+
+            if (comando.equals("=")) {
+                // Aquí irá la lógica para evaluar la expresión
+            } else if (comando.equals("C")) {
+                pantalla.setText("");
+            } else {
+                pantalla.setText(pantalla.getText() + comando);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new CalculadoraGUI();
+    }
+}
